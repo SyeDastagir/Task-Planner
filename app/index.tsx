@@ -1,51 +1,31 @@
 import { Button, FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
+import TaskItem from '.././components/TaskItem';
+import TaskInputView from '.././components/TaskInputView';
 
 function Home() {
-  const [task, setTask] = useState('');
+  
   const [tasks, setTasks] = useState<TaskModule[]>([]);
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Add task"
-          value={task}
-          onChangeText={setTask}
-        />
-        <Button
-          title="Add"
-          onPress={() => {
-            console.log(task);
-            setTasks([...tasks, new TaskModule(task, false)]);
-            setTask('');
-          }}
-        />
-      </View>
+      
+      <TaskInputView onAddTask 
+       = {
+        (task: string) => {
+          setTasks([...tasks, new TaskModule(task, false)]);
+        }
+      }/>
 
       <FlatList
         data={tasks}
         renderItem={({ item }) => (
-          <View style={styles.itemviewContainer}>
-            <Text>{item.task}</Text>
-
-            <View style={item.isCompleted ? styles.statusContainer : styles.pendingStatusContainer}>
-              <Text>{item.isCompleted ? "Completed" : "Pending"}</Text>
-            </View>
-
-            {!item.isCompleted && (
-              <Button
-                title="Done"
-                onPress={() => {
-                  const updatedTasks = tasks.map(t =>
-                    t.task === item.task ? { ...t, isCompleted: true } : t
-                  );
-                  setTasks(updatedTasks);
-                }}
-              />
-            )}
-          </View>
+          <TaskItem task={item.task} isCompleted = {item.isCompleted} onClickDone={
+            () => {
+              const index = tasks.indexOf(item);
+              tasks[index].isCompleted = !tasks[index].isCompleted;
+              setTasks([...tasks]);
+          } }/>
         )}
       />
     </View>
@@ -56,40 +36,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 20
-  },
-  input: {
-    flex: 1,
-    height: 40,
-    paddingStart: 10,
-    paddingEnd: 10,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5
-  },
-  itemviewContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    margin: 5
-  },
-  statusContainer: {
-    backgroundColor: 'green',
-    padding: 5,
-    borderRadius: 5
-  },
-  pendingStatusContainer: {
-    backgroundColor: 'yellow',
-    padding: 5,
-    borderRadius: 5
   }
 })
 
