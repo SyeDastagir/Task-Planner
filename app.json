@@ -4,6 +4,7 @@
     "slug": "TaskPlannerApp",
     "version": "1.0.0",
     "orientation": "portrait",
+    "backgroundColor": "#596869",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
